@@ -44,11 +44,34 @@
                     id="exampleInputPassword1"
                   />
                 </div>
-                <v-img-cropper
-                  type="primary"
-                  title="Crop your new profile picture"
-                  @message="handlerMessage"
-                />
+                <div class="row">
+                  <div class="col-6">
+                    <v-img-cropper
+                      type="primary"
+                      title="Crop your new profile picture"
+                      @message="handlerMessage"
+                    />
+                  </div>
+                  <div class="col-2">
+                    <div class="mb-3">
+                      <label for="" class="form-label">Preview:</label>
+                    </div>
+                  </div>
+                  <div class="col-4 d-flex align-items-center">
+                    <button
+                      class="btn shadow-none btn-avatar"
+                      type="button"
+                      id="preview"
+                    >
+                      <img
+                        class="rounded-circle img-fluid "
+                        src="https://avatars.githubusercontent.com/u/84322691?s=60&v=4"
+                        style="height:68px;width:68px"
+                      />
+                    </button>
+                  </div>
+                </div>
+
                 <div class="mb-3 form-check">
                   <input
                     type="checkbox"
@@ -72,9 +95,6 @@
 <script>
 import Vue from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
-// Uncomment import and local "components" registration if library is not registered globally.
-// import { VImgCropperSample } from '@/entry.esm';
-
 export default Vue.extend({
   name: "ServeDev",
   data() {
@@ -83,7 +103,15 @@ export default Vue.extend({
   methods: {
     handlerMessage(e) {
       if (e.Status == "Pass") {
-        console.log(e.Data)
+        console.log(e.Data);
+        var image = new Image();
+        image.onload = function() {
+          console.log(image.width);
+        };
+        image.src = e.Data;
+        var preview = document.getElementById("preview");
+        preview.removeChild(preview.childNodes[0]);
+        preview.appendChild(image);
       } else {
         console.log(e.Message);
         alert(e.Message);
@@ -105,5 +133,29 @@ export default Vue.extend({
 <style lang="css">
 body {
   background: #5eaaa8;
+}
+.btn-avatar {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+.avatar {
+  object-fit: cover;
+}
+.btn-avatar:active,
+.btn-avatar:focus,
+.btn-avatar:hover {
+  border: none !important;
+  outline: none !important;
+  background-color: Transparent !important;
+}
+#preview img {
+  height: 68px;
+  width: 68px;
+  border-radius: 50% !important;
+  max-width: 100%;
 }
 </style>

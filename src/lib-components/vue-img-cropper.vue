@@ -163,7 +163,7 @@ export default {
     },
     exportType: {
       type: String,
-      default: "Blob",
+      default: "Base64",
       validator(x) {
         return ["Base64", "Blob"].indexOf(x) !== -1;
       },
