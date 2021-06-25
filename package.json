@@ -1,15 +1,33 @@
 {
-  "name": "vue-img-cropper",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/vue-img-cropper.ssr.js",
-  "browser": "dist/vue-img-cropper.esm.js",
-  "module": "dist/vue-img-cropper.esm.js",
-  "unpkg": "dist/vue-img-cropper.min.js",
+  "name": "v-img-cropper",
+  "version": "1.0.1",
+  "description": "Easy to crop and resize your picture before upload",
+  "main": "dist/v-img-cropper.ssr.js",
+  "browser": "dist/v-img-cropper.esm.js",
+  "module": "dist/v-img-cropper.esm.js",
+  "unpkg": "dist/v-img-cropper.min.js",
   "files": [
     "dist/*",
     "src/**/*.vue"
   ],
+  "keywords": [
+    "vue avatar cropper",
+    "avatar",
+    "crop picture",
+    "cropper",
+    "vue image cropper",
+    "image crop",
+    "avatar-cropper",
+    "image cropper",
+    "img resize",
+    "vuejs",
+    "javascript",
+    "v-img-cropper"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hieutran094/vue-img-cropper.git"
+  },
   "sideEffects": false,
   "scripts": {
     "serve": "vue-cli-service serve dev/serve.js",
@@ -47,5 +65,10 @@
   },
   "engines": {
     "node": ">=12"
-  }
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hieutran094/vue-img-cropper/issues"
+  },
+  "homepage": "https://github.com/hieutran094/vue-img-cropper#readme"
 }

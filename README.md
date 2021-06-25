@@ -24,18 +24,18 @@
 1. Install the package:
 
    ```sh
-   npm install vue-img-cropper
+   npm install v-img-cropper
    # or
-   yarn add vue-img-cropper
+   yarn add v-img-cropper
    ```
 
 2. Register it:
 
    ```js
-   import VImgCropper from "vue-img-cropper";
+   import VImgCropper from "v-img-cropper";
    
    // or
-   const VImgCropper = require('vue-img-cropper');
+   const VImgCropper = require('v-img-cropper');
 
 
    Vue.component(VImgCropper);

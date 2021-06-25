@@ -122,7 +122,6 @@
 </template>
 <script>
 import { cropShape } from "./classes/shape.js";
-import "bootstrap/dist/css/bootstrap.min.css";
 export default {
   name: "v-img-cropper",
   props: {
@@ -313,7 +312,7 @@ export default {
   },
 };
 </script>
-<style lang="css" scoped>
+<style scoped>
 .wrapper {
   display: block;
   margin: 0 auto;
