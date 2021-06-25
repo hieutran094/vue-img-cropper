@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div>
     <div
       class="modal fade"
       :class="[{ show: show }]"
@@ -108,13 +108,13 @@
       style="display: none;"
     ></div>
     <div class="mb-3">
-      <label for="choose-file" class="form-label">Choose file</label>
+      <label for="choose-file" class="form-label">{{ label }}</label>
       <input
         class="form-control"
         type="file"
         id="choose-file"
         ref="choose-file"
-        accept="image/png, image/jpeg, image/jpg"
+        :accept="accept"
         @change="onFileChange"
       />
     </div>
@@ -129,6 +129,10 @@ export default {
     title: {
       type: String,
       default: "Crop your new profile picture",
+    },
+    label: {
+      type: String,
+      default: "Choose you picture",
     },
     type: {
       type: String,
@@ -148,6 +152,29 @@ export default {
           ].indexOf(x) !== -1
         );
       },
+    },
+    accept: {
+      type: String,
+      default: "image/png, image/jpeg, image/jpg",
+    },
+    size: {
+      type: Number,
+      default: 1,
+    },
+    exportType: {
+      type: String,
+      default: "Blob",
+      validator(x) {
+        return ["Base64", "Blob"].indexOf(x) !== -1;
+      },
+    },
+    outputQuality: {
+      type: Number,
+      default: 0.92,
+    },
+    outputType: {
+      type: String,
+      default: "image/jpeg",
     },
     btnsize: {
       type: String,
@@ -219,20 +246,51 @@ export default {
       let file = event.target.files[0];
       if (!file) return;
       try {
+        if (file.size > this.size * 1024 * 1024) {
+          throw `File should be smaller than ${this.size}mb`;
+        } else if (
+          file.name.indexOf(".jpg") <= 0 &&
+          file.name.indexOf(".jpeg") <= 0 &&
+          file.name.indexOf(".png") <= 0
+        ) {
+          throw "We only support PNG, or JPG pictures.";
+        }
         let result = await this.toBase64(file);
         let isOpenModal = await this.cropShape.handleFileChange(result);
         if (isOpenModal) this.openModal();
       } catch (err) {
-        console.log(err);
+        this.$emit("message", { Status: "False", Message: err, Data: {} });
       }
     },
     onSliderInput(event) {
       this.cropShape.handleSliderChange(event);
     },
-    onCrop() {
-      let base64 = this.cropShape.handleCrop();
-      this.$emit("change", base64);
-      this.closeModal()
+    async onCrop() {
+      let msg = {};
+      try {
+        let outputOption = {
+          quality: this.outputQuality,
+          type: this.exportType,
+          file: this.outputType,
+        };
+        let base64 = await this.cropShape.handleCrop(outputOption);
+        if (base64) {
+          msg = {
+            Status: "Pass",
+            Message: "Crop Success",
+            Data: base64,
+          };
+        }
+      } catch (err) {
+        msg = {
+          Status: "False",
+          Message: err,
+          Data: {},
+        };
+      } finally {
+        this.$emit("message", msg);
+        this.closeModal();
+      }
     },
     clearFile() {
       let inputs = document.getElementById("choose-file");

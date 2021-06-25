@@ -157,7 +157,7 @@ class cropShape extends shape {
       this.width > this.height ? this.height / 2 : this.width / 2;
     this.centerCoordinates.x = this.width / 2;
     this.centerCoordinates.y = this.height / 2;
-    this.setRadius(this.maxRadius)
+    this.setRadius(this.maxRadius);
     this.container.height = this.height;
     this.container.width = this.width;
     this.background.height = this.height;
@@ -381,32 +381,49 @@ class cropShape extends shape {
     this.setRadius(this.maxRadius * (parseInt(event.target.value) / 100));
     this.draw();
   }
-  handleCrop() {
-    let crop_ctx = this.crop.getContext("2d");
-    let x =
-      (this.centerCoordinates.x - this.radius) * (this.img.width / this.width);
-    let y =
-      (this.centerCoordinates.y - this.radius) *
-      (this.img.height / this.height);
-    let w = this.radius * 2 * (this.img.width / this.width);
-    let h = this.radius * 2 * (this.img.height / this.height);
-    let result = "";
-    this.crop.width = this.radius * 2;
-    this.crop.height = this.radius * 2;
-    crop_ctx.imageSmoothingQuality = "high";
-    crop_ctx.drawImage(
-      this.img,
-      x,
-      y,
-      w,
-      h,
-      0,
-      0,
-      this.radius * 2,
-      this.radius * 2
-    );
-    result = this.crop.toDataURL("image/jpeg", 1.0);
-    return result;
+  handleCrop(obj) {
+    return new Promise((result, reject) => {
+      if (obj == null || obj == undefined)
+        reject("Please pass output options before crop");
+      let crop_ctx = this.crop.getContext("2d");
+      let x =
+        (this.centerCoordinates.x - this.radius) *
+        (this.img.width / this.width);
+      let y =
+        (this.centerCoordinates.y - this.radius) *
+        (this.img.height / this.height);
+      let w = this.radius * 2 * (this.img.width / this.width);
+      let h = this.radius * 2 * (this.img.height / this.height);
+      this.crop.width = this.radius * 2;
+      this.crop.height = this.radius * 2;
+      crop_ctx.imageSmoothingQuality = "high";
+      crop_ctx.drawImage(
+        this.img,
+        x,
+        y,
+        w,
+        h,
+        0,
+        0,
+        this.radius * 2,
+        this.radius * 2
+      );
+      if (obj.type == "Base64") {
+        let res = this.crop.toDataURL(
+          obj.file ? obj.file : "image/jpeg",
+          obj.quality ? obj.quality : 0.95
+        );
+        result(res);
+      } else if (obj.type == "Blob") {
+        this.crop.toBlob(
+          function(blob) {
+            result(blob);
+          },
+          obj.file ? obj.file : "image/jpeg",
+          obj.quality ? obj.quality : 0.95
+        );
+      } else reject("Export type is illegal");
+    });
   }
   handleRadiusChange(cb) {
     if (cb) {
